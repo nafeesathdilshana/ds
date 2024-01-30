@@ -1,63 +1,64 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-const int MAX = 50;
-int root[MAX];
-const int nodes = 4, edges = 5;
-pair<long long, pair<int, int> > p[MAX];
-int parent(int a)
-//find the parent of the given node
-{
-while(root[a] != a)
-{
-root[a] = root[root[a]];
-a = root[a];
-}
-return a;
-}
-void union_find(int a, int b)
+#define INF 9999999
+// number of vertices in graph
+#define V 5
+// create a 2d array of size 5x5
+//for adjacency matrix to represent graph
+int G[V][V] = {
+{0, 9, 75, 0, 0},
+{9, 0, 95, 19, 42},
+{75, 95, 0, 51, 66},
+{0, 19, 51, 0, 31},
+{0, 42, 66, 31, 0}};
+int main() {
+int no_edge; // number of edge
+// create a array to track selected vertex
+// selected will become true otherwise false
+int selected[V];
+// set selected false initially
 
-//check if the given two vertices are in the same “union” or not
-{
-int d = parent(a);
-int e = parent(b);
-root[d] = root[e];
-}
+memset(selected, false, sizeof(selected));
+// set number of edge to 0
+no_edge = 0;
+// the number of egde in minimum spanning tree will be
+// always less than (V -1), where V is number of vertices in
+//graph
+// choose 0th vertex and make it true
+selected[0] = true;
+int x; // row number
+int y; // col number
+// print for edge and weight
+cout << "Edge"
+<< " : "
+<< "Weight";
+cout << endl;
+while (no_edge < V - 1) {
+//For every vertex in the set S, find the all adjacent vertices
+// , calculate the distance from the vertex selected at step 1.
+// if the vertex is already in the set S, discard it otherwise
+//choose another vertex nearest to selected vertex at step 1.
+int min = INF;
+x = 0;
+y = 0;
+for (int i = 0; i < V; i++) {
+if (selected[i]) {
+for (int j = 0; j < V; j++) {
+if (!selected[j] && G[i][j]) { // not in selected and there is an edge
+if (min > G[i][j]) {
 
-long kruskal()
-{
-int a, b;
-long cost, minCost = 0;
-for(int i = 0 ; i < edges ; ++i)
-{
-a = p[i].second.first;
-b = p[i].second.second;
-cost = p[i].first;
-if(parent(a) != parent(b))
-//only select edge if it does not create a cycle (i.e. the two nodesforming it have different root nodes)
-{
-minCost = minCost + cost;
-union_find(a, b);
+min = G[i][j];
+x = i;
+y = j;
 }
 }
-return minCost;
 }
-int main()
-{
-int x, y;
-long long weight, cost, minCost;
-for(int i = 0;i<MAX;++i)
-//initialize the array groups
-{
-root[i] = i;
 }
-p[0] = make_pair(10, make_pair(0, 1));
-p[1] = make_pair(18, make_pair(1, 2));
-p[2] = make_pair(13, make_pair(2, 3));
-p[3] = make_pair(21, make_pair(0, 2));
-p[4] = make_pair(22, make_pair(1, 3));
-sort(p, p + edges);
-//sort the array of edges
-minCost = kruskal();
-cout<<"Minimum cost is:"<<minCost<<endl;
+}
+cout << x << " - " << y << " : " << G[x][y];
+cout << endl;
+selected[y] = true;
+no_edge++;
+}
 return 0;
 }
